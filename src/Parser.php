@@ -2,7 +2,6 @@
 
 namespace DeepSymbols;
 
-use PhpParser\NodeDumper;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
@@ -18,7 +17,8 @@ class Parser
         return $this->basePath . $this->file;
     }
 
-    public function parse($basePath, $file) {
+    public function parse($basePath, $file)
+    {
         $basePath = rtrim($basePath, '/') . '/';
         $file = str_replace($basePath, '', $file);
         $this->basePath = $basePath;
@@ -35,18 +35,19 @@ class Parser
         $traverser->addVisitor(new Visitor($this));
         $traverser->traverse($ast);
 
-        if($this->class) {
+        if ($this->class) {
             return Indexer::getMembers($this->class);
         }
 
         return [];
     }
 
-    public function setClass($class) {
+    public function setClass($class)
+    {
         $this->class = $class;
     }
 
-    public function getClass() : ?string
+    public function getClass(): ?string
     {
         return $this->class;
     }

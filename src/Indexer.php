@@ -37,10 +37,10 @@ class Indexer
 
         foreach ($methods as $index => $method) {
             $nameInPath = $appendName ? sprintf('[%s] ', self::getClassNameWithoutNamespace($class)) : '';
-            $nameInPath .= sprintf('[%s] ', $method['type']).$method['name'];
+            $nameInPath .= sprintf('[%s] ', $method['type']) . $method['name'];
             $methods[$index] = [
                 'name' => $method['name'],
-                'path' => self::$classes[$class]['path'].':'. $method['start_line'].':'.$nameInPath,
+                'path' => self::$classes[$class]['path'] . ':' . $method['start_line'] . ':' . $nameInPath,
             ];
         }
 
