@@ -24,15 +24,14 @@ class Parser
         $this->file = $file;
         $code = file_get_contents($this->getCurrentFilePath());
         $parser = (new ParserFactory())->createForNewestSupportedVersion();
-        $nameResolver = new NameResolver;
 
         $ast = $parser->parse($code);
 
         $traverser = new NodeTraverser();
-        $traverser->addVisitor($nameResolver);
+        $traverser->addVisitor(new NameResolver());
         $traverser->addVisitor(new Visitor($this));
 
-        $ast = $traverser->traverse($ast);
+        $traverser->traverse($ast);
 
         if($this->class) {
             return Indexer::getMembers($this->class);

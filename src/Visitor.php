@@ -17,7 +17,7 @@ class Visitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node)
     {
-        $autoloader = require($this->parser->getBasePath().'vendor/autoload.php');
+        $autoloader = require($this->parser->getBasePath() . 'vendor/autoload.php');
 
         if ($node->getType() == 'Stmt_Class') {
             $class = $node->namespacedName->toString();
@@ -29,14 +29,19 @@ class Visitor extends NodeVisitorAbstract
             }
             if ($extends != null) {
                 Indexer::setInheritance($class, $extends);
-                $path = realpath($autoloader->findFile($extends));
-                $path = str_replace($this->parser->getBasePath(), '', $path);
-                (new Parser())->parse($this->parser->getBasePath(), $path);
+                if ($autoloader->findFile($extends)) {
+                    $path = realpath($autoloader->findFile($extends));
+                    $path = str_replace($this->parser->getBasePath(), '', $path);
+                    (new Parser())->parse($this->parser->getBasePath(), $path);
+                }
             }
 
             foreach ($node->stmts as $statement) {
                 if ($statement instanceof Node\Stmt\ClassMethod) {
-                    Indexer::setMember($class, $statement->name->name, $statement->name->getAttribute('startLine'));
+                    Indexer::setMember($class, $statement->name->name, $statement->name->getAttribute('startLine'), 'Method');
+                } else if ($statement instanceof Node\Stmt\Property) {
+                    $property = $statement->props[0];
+                    Indexer::setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
                 }
             }
         }
