@@ -47,7 +47,7 @@ class Visitor extends NodeVisitorAbstract
                 } else if ($statement instanceof Node\Stmt\Property) {
                     $property = $statement->props[0];
                     Indexer::setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
-                } else {
+                } else if ($statement instanceof Node\Stmt\TraitUse) {
                     foreach ($statement->traits as $node) {
                         $trait = implode('\\', $node->parts);
                         Indexer::setInheritance($class, $trait);
