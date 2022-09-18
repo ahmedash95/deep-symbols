@@ -4,6 +4,8 @@ namespace DeepSymbols;
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\Node\Scalar\MagicConst\Class_;
+use PhpParser\Node\Scalar\MagicConst\Trait_;
 
 class Visitor extends NodeVisitorAbstract
 {
@@ -19,14 +21,19 @@ class Visitor extends NodeVisitorAbstract
     {
         $autoloader = require($this->parser->getBasePath() . 'vendor/autoload.php');
 
-        if ($node->getType() == 'Stmt_Class') {
+        if (in_array($node->getType(), ['Stmt_Class', 'Stmt_Trait'])) {
             $class = $node->namespacedName->toString();
-            $extends = $node->extends !== null ? implode('\\', $node->extends->parts) : null;
 
             Indexer::setClass($class, $this->parser->getCurrentFilePath());
             if ($this->parser !== null) {
                 $this->parser->setClass($class);
             }
+
+            $extends = null;
+            if(isset($node->extends)) {
+                $extends = $node->extends !== null ? implode('\\', $node->extends->parts) : null;
+            }
+
             if ($extends != null) {
                 Indexer::setInheritance($class, $extends);
                 if ($autoloader->findFile($extends)) {
@@ -42,7 +49,17 @@ class Visitor extends NodeVisitorAbstract
                 } else if ($statement instanceof Node\Stmt\Property) {
                     $property = $statement->props[0];
                     Indexer::setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
-                }
+		} else {
+		    foreach($statement->traits as $node) {
+			$trait = implode('\\', $node->parts);
+			Indexer::setInheritance($class, $trait);
+			if ($autoloader->findFile($trait)) {
+			    $path = realpath($autoloader->findFile($trait));
+			    $path = str_replace($this->parser->getBasePath(), '', $path);
+			    (new Parser())->parse($this->parser->getBasePath(), $path);
+			}
+		    }
+		}
             }
         }
     }

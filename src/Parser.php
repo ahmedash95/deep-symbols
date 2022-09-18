@@ -2,6 +2,7 @@
 
 namespace DeepSymbols;
 
+use PhpParser\NodeDumper;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
@@ -29,8 +30,9 @@ class Parser
 
         $traverser = new NodeTraverser();
         $traverser->addVisitor(new NameResolver());
-        $traverser->addVisitor(new Visitor($this));
+        $traverser->traverse($ast);
 
+        $traverser->addVisitor(new Visitor($this));
         $traverser->traverse($ast);
 
         if($this->class) {
