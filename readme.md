@@ -31,7 +31,7 @@ class Admin extends User
     }
 }
 ```
-What this plugin, it would show you all the members and inherited members of the class you are currently in.
+With this plugin, it would show you all the members and inherited members of the class you are currently in.
 
 <img src="preview.png">
 
