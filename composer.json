@@ -1,11 +1,27 @@
 {
-    "autoload": {
-        "psr-4": {
-            "DeepSymbols\\": "src/"
-        }
-    },
-    "require": {
-        "nikic/php-parser": "dev-master",
-        "symfony/var-dumper": "^6.1"
+  "name": "ahmedash95/deep-symbols",
+  "type": "plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ahmed Ashraf",
+      "email": "ahmed29329@gmail.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable" : false,
+  "require": {
+    "nikic/php-parser": "dev-master"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "DeepSymbols\\": "src/"
+    }
+  },
+  "bin": [
+    "bin/deep-symbols"
+  ]
 }

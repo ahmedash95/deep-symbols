@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
+
+use DeepSymbols\Parser;
+
+$argv = $_SERVER['argv'];
+
+if (count($argv) < 2) {
+    echo "Usage: deep-symbols [root path] [file]\n";
+    exit(1);
+}
+
+$parser = new Parser();
+/**
+ Example of how to call the indexer:
+     $ deep-symbols /var/www/project src/Controller/HomeController.php
+**/
+$output = $parser->parse($argv[1], $argv[2]);
+
+foreach($output as $item) {
+    echo $item['path'] . PHP_EOL;
+}
