@@ -8,7 +8,6 @@ use PhpParser\ParserFactory;
 
 class Parser
 {
-    private ?string $class = null;
     private string $basePath;
     private string $file;
     private $loader;
@@ -69,21 +68,11 @@ class Parser
         $traverser->addVisitor(new Visitor($this));
         $traverser->traverse($ast);
 
-        if ($this->class) {
-            return $this->indexer->getMembers($this->class);
+        if ($this->indexer->hasClasses()) {
+            return $this->indexer->getMembers(array_key_first($this->indexer->getClasses()));
         }
 
         return [];
-    }
-
-    public function setClass($class): void
-    {
-        $this->class = $class;
-    }
-
-    public function getClass(): ?string
-    {
-        return $this->class;
     }
 
     public function getBasePath(): string

@@ -56,4 +56,14 @@ class Indexer
 
         return end($parts);
     }
+
+    public function hasClasses(): bool
+    {
+        return count($this->classes) > 0;
+    }
+
+    public function getClasses()
+    {
+        return $this->classes;
+    }
 }

@@ -20,9 +20,6 @@ class Visitor extends NodeVisitorAbstract
             $class = $node->namespacedName->toString();
 
             $this->parser->getIndexer()->setClass($class, $this->parser->getCurrentFilePath());
-            if ($this->parser !== null) {
-                $this->parser->setClass($class);
-            }
 
             $extends = null;
             if (isset($node->extends)) {
@@ -34,7 +31,7 @@ class Visitor extends NodeVisitorAbstract
                 if ($this->parser->getLoader()->findFile($extends)) {
                     $path = realpath($this->parser->getLoader()->findFile($extends));
                     $path = str_replace($this->parser->getBasePath(), '', $path);
-                    $this->parser->newParser()->parse($path);
+                    $this->parser->parse($path);
                 }
             }
 
@@ -51,7 +48,7 @@ class Visitor extends NodeVisitorAbstract
                         if ($this->parser->getLoader()->findFile($trait)) {
                             $path = realpath($this->parser->getLoader()->findFile($trait));
                             $path = str_replace($this->parser->getBasePath(), '', $path);
-                            $this->parser->newParser()->parse($path);
+                            $this->parser->parse($path);
                         }
                     }
                 }
