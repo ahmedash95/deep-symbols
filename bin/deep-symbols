@@ -14,9 +14,7 @@ $loader = require($loaderPath);
 
 include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
-use DeepSymbols\Parser;
-
-$parser = new Parser($argv[1], $loader);
+$parser = new DeepSymbols\Parser($argv[1], $loader);
 /**
  Example of how to call the indexer:
      $ deep-symbols /var/www/project src/Controller/HomeController.php
