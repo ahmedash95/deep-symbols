@@ -41,7 +41,13 @@ class Parser
         $file = str_replace($this->basePath, '', $file);
         $this->file = $file;
 
-        $code = file_get_contents($this->getCurrentFilePath());
+        $filePath = $this->getCurrentFilePath();
+
+        if ((pathinfo($filePath)['extension'] ?? null) !== 'php') {
+            return [];
+        }
+
+        $code = file_get_contents($filePath);
         $parser = (new ParserFactory())->createForNewestSupportedVersion();
 
         $ast = $parser->parse($code);

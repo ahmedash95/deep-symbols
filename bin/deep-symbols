@@ -10,11 +10,13 @@ if (count($argv) < 3) {
 
 // Get composer loader object of the project we are running
 $loaderPath = rtrim($argv[1], '/').'/vendor/autoload.php';
-$loader = require($loaderPath);
+if (file_exists($loaderPath)) {
+    $loader = require($loaderPath);
+}
 
 include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
-$parser = new DeepSymbols\Parser($argv[1], $loader);
+$parser = new DeepSymbols\Parser($argv[1], $loader ?? new DeepSymbols\DumpLoader());
 /**
  Example of how to call the indexer:
      $ deep-symbols /var/www/project src/Controller/HomeController.php
