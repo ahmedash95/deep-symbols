@@ -21,24 +21,9 @@ class Parser
         $this->indexer = new Indexer();
     }
 
-    public function newParser(): self
-    {
-        $instance = new self($this->basePath, $this->loader);
-        $instance->setIndexer($this->indexer);
-    
-        return $instance;
-    }
-
     public function getLoader()
     {
         return $this->loader;
-    }
-
-    public function setIndexer(Indexer $indexer): self
-    {
-        $this->indexer = $indexer;
-
-        return $this;
     }
 
     public function getIndexer(): Indexer
