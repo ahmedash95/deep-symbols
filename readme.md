@@ -33,7 +33,7 @@ class Admin extends User
 ```
 With this plugin, it would show you all the members and inherited members of the class you are currently in.
 
-<video src="demo.mov">
+https://user-images.githubusercontent.com/8272048/191131151-9f9af98b-298b-44ab-8cdf-1e3696350642.mov
 
 ### Install
 
