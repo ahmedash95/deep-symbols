@@ -1,23 +1,27 @@
 #!/usr/bin/env php
 <?php
 
-include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
-
-use DeepSymbols\Parser;
-
 $argv = $_SERVER['argv'];
 
-if (count($argv) < 2) {
+if (count($argv) < 3) {
     echo "Usage: deep-symbols [root path] [file]\n";
     exit(1);
 }
 
-$parser = new Parser();
+// Get composer loader object of the project we are running
+$loaderPath = rtrim($argv[1], '/').'/vendor/autoload.php';
+$loader = require($loaderPath);
+
+include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
+
+use DeepSymbols\Parser;
+
+$parser = new Parser($argv[1], $loader);
 /**
  Example of how to call the indexer:
      $ deep-symbols /var/www/project src/Controller/HomeController.php
 **/
-$output = $parser->parse($argv[1], $argv[2]);
+$output = $parser->parse($argv[2]);
 
 foreach($output as $item) {
     echo $item['path'] . PHP_EOL;

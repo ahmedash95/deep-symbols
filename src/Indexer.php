@@ -4,12 +4,12 @@ namespace DeepSymbols;
 
 class Indexer
 {
-    static array $classes = [];
+    private array $classes = [];
 
-    public static function setClass($class, $path)
+    public function setClass($class, $path)
     {
-        if (!isset(self::$classes[$class])) {
-            self::$classes[$class] = [
+        if (!isset($this->classes[$class])) {
+            $this->classes[$class] = [
                 'path' => $path,
                 'members' => [],
                 'inheritance' => [],
@@ -17,42 +17,43 @@ class Indexer
         }
     }
 
-    public static function setInheritance($class, $parent)
+    public function setInheritance($class, $parent)
     {
-        self::$classes[$class]['inheritance'][] = $parent;
+        $this->classes[$class]['inheritance'][] = $parent;
     }
 
-    public static function setMember($class, $method, $lineNumber, $type)
+    public function setMember($class, $member, $lineNumber, $type)
     {
-        self::$classes[$class]['members'][] = [
-            'name' => $method,
+        $this->classes[$class]['members'][] = [
+            'name' => $member,
             'type' => $type,
             'start_line' => $lineNumber,
         ];
     }
 
-    public static function getMembers(string $class, bool $appendName = false): array
+    public function getMembers(string $class, bool $appendName = false): array
     {
-        $methods = self::$classes[$class]['members'] ?? [];
+        $members = $this->classes[$class]['members'] ?? [];
 
-        foreach ($methods as $index => $method) {
+        foreach ($members as $index => $member) {
             $nameInPath = $appendName ? sprintf('[%s] ', self::getClassNameWithoutNamespace($class)) : '';
-            $nameInPath .= sprintf('[%s] ', $method['type']) . $method['name'];
-            $methods[$index] = [
-                'name' => $method['name'],
-                'path' => self::$classes[$class]['path'] . ':' . $method['start_line'] . ':' . $nameInPath,
+            $nameInPath .= sprintf('[%s] ', $member['type']) . $member['name'];
+            $members[$index] = [
+                'name' => $member['name'],
+                'path' => $this->classes[$class]['path'] . ':' . $member['start_line'] . ':' . $nameInPath,
             ];
         }
 
-        foreach (self::$classes[$class]['inheritance'] ?? [] as $parent) {
-            $methods = array_merge($methods, self::getMembers($parent, true));
+        foreach ($this->classes[$class]['inheritance'] ?? [] as $parent) {
+            $members = array_merge($members, self::getMembers($parent, true));
         }
-        return $methods ?? [];
+        return $members ?? [];
     }
 
-    public static function getClassNameWithoutNamespace(string $class): string
+    private function getClassNameWithoutNamespace(string $class): string
     {
         $parts = explode('\\', $class);
+
         return end($parts);
     }
 }

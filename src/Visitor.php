@@ -7,7 +7,6 @@ use PhpParser\NodeVisitorAbstract;
 
 class Visitor extends NodeVisitorAbstract
 {
-
     private ?Parser $parser;
 
     public function __construct(?Parser $parser)
@@ -17,12 +16,10 @@ class Visitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node)
     {
-        $autoloader = require($this->parser->getBasePath() . 'vendor/autoload.php');
-
         if (in_array($node->getType(), ['Stmt_Class', 'Stmt_Trait'])) {
             $class = $node->namespacedName->toString();
 
-            Indexer::setClass($class, $this->parser->getCurrentFilePath());
+            $this->parser->getIndexer()->setClass($class, $this->parser->getCurrentFilePath());
             if ($this->parser !== null) {
                 $this->parser->setClass($class);
             }
@@ -33,28 +30,28 @@ class Visitor extends NodeVisitorAbstract
             }
 
             if ($extends != null) {
-                Indexer::setInheritance($class, $extends);
-                if ($autoloader->findFile($extends)) {
-                    $path = realpath($autoloader->findFile($extends));
+                $this->parser->getIndexer()->setInheritance($class, $extends);
+                if ($this->parser->getLoader()->findFile($extends)) {
+                    $path = realpath($this->parser->getLoader()->findFile($extends));
                     $path = str_replace($this->parser->getBasePath(), '', $path);
-                    (new Parser())->parse($this->parser->getBasePath(), $path);
+                    $this->parser->newParser()->parse($path);
                 }
             }
 
             foreach ($node->stmts as $statement) {
                 if ($statement instanceof Node\Stmt\ClassMethod) {
-                    Indexer::setMember($class, $statement->name->name, $statement->name->getAttribute('startLine'), 'Method');
-                } else if ($statement instanceof Node\Stmt\Property) {
+                    $this->parser->getIndexer()->setMember($class, $statement->name->name, $statement->name->getAttribute('startLine'), 'Method');
+                } elseif ($statement instanceof Node\Stmt\Property) {
                     $property = $statement->props[0];
-                    Indexer::setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
-                } else if ($statement instanceof Node\Stmt\TraitUse) {
+                    $this->parser->getIndexer()->setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
+                } elseif ($statement instanceof Node\Stmt\TraitUse) {
                     foreach ($statement->traits as $node) {
                         $trait = implode('\\', $node->parts);
-                        Indexer::setInheritance($class, $trait);
-                        if ($autoloader->findFile($trait)) {
-                            $path = realpath($autoloader->findFile($trait));
+                        $this->parser->getIndexer()->setInheritance($class, $trait);
+                        if ($this->parser->getLoader()->findFile($trait)) {
+                            $path = realpath($this->parser->getLoader()->findFile($trait));
                             $path = str_replace($this->parser->getBasePath(), '', $path);
-                            (new Parser())->parse($this->parser->getBasePath(), $path);
+                            $this->parser->newParser()->parse($path);
                         }
                     }
                 }
