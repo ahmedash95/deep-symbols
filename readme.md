@@ -37,8 +37,43 @@ With this plugin, it would show you all the members and inherited members of the
 
 ### Install
 
-TBD.
+First you need to install deep-symbol globally from your composer
+
+```
+composer global require ahmedash95/deep-symbols
+```
+
+Make sure that your global composer directory is inside of your PATH environment variable. Simply add this directory to your PATH in your ~/.bash_profile (or ~/.bashrc) like this:
+```
+export PATH=~/.composer/vendor/bin:$PATH
+```
+
+once installed you can verifiy if its working by opening a new terminal session and type 
+```
+$ deep-symbols
+```
+
+### Plugin
+
+Using vim-plug
+```vim
+Plug 'ahmedash95/deep-symbols'
+```
+
+Using packer.nvim
+```lua
+use 'ahmedash95/deep-symbols'
+```
 
 ### Usage
 
-TBD.
+you can run it with the command
+```
+:lua require("deepsymbols").get_symbols()
+
+-- or mapping
+
+vim.keymap.set('n', '<leader>o', ':lua require("deepsymbols").get_symbols()<CR>')
+```
+
+
