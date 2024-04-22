@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.4
+- Center line position when opening a file from telescope
+
 ## 0.0.3
 
 - Add support for telescope

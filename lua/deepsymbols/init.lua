@@ -41,6 +41,7 @@ local get_symbols = function()
                     actions.close(prompt_bufnr)
                     vim.cmd('e ' .. selection.filename)  -- Open the file
                     vim.cmd(':' .. selection.lnum)      -- Go to the line
+                    vim.cmd('normal zz')  -- Center the line in the window
                 end)
                 return true
             end
