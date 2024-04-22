@@ -11,7 +11,7 @@
   "minimum-stability": "dev",
   "prefer-stable" : false,
   "require": {
-    "nikic/php-parser": "dev-master"
+    "nikic/php-parser": "^5.0"
   },
   "require-dev": {
     "symfony/var-dumper": "^6.1"
