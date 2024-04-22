@@ -23,7 +23,7 @@ class Visitor extends NodeVisitorAbstract
 
             $extends = null;
             if (isset($node->extends)) {
-                $extends = $node->extends !== null ? implode('\\', $node->extends->parts) : null;
+                $extends = $node->extends !== null ? $node->extends->name : null;
             }
 
             if ($extends != null) {
@@ -43,7 +43,7 @@ class Visitor extends NodeVisitorAbstract
                     $this->parser->getIndexer()->setMember($class, $property->name, $property->getAttribute('startLine'), 'Property');
                 } elseif ($statement instanceof Node\Stmt\TraitUse) {
                     foreach ($statement->traits as $node) {
-                        $trait = implode('\\', $node->parts);
+                        $trait = $node->name;
                         $this->parser->getIndexer()->setInheritance($class, $trait);
                         if ($this->parser->getLoader()->findFile($trait)) {
                             $path = realpath($this->parser->getLoader()->findFile($trait));
